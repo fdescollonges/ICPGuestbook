@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+piVersion: apps/v1
 kind: Deployment
 metadata:
   name: analyzer
@@ -24,11 +24,20 @@ spec:
             memory: 100Mi
         env:
         - name: VCAP_SERVICES_TONE_ANALYZER_API_KEY
-          value: YOUR_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: wta-apikey-secret
+              key: wta-apikey
         - name : VCAP_SERVICES_TONE_ANALYZER_TOKEN_ADDRESS
-          value: "https://iam.bluemix.net/identity/token"
+          valueFrom:
+            configMapKeyRef:
+              name: env-ibmcloud-configmap
+              key: VCAP_SERVICES_TONE_ANALYZER_TOKEN_ADDRESS
         - name: VCAP_SERVICES_TONE_ANALYZER_SERVICE_API
-          value: YOUR_URL
+          valueFrom:
+            configMapKeyRef:
+              name: env-ibmcloud-configmap
+              key: VCAP_SERVICES_TONE_ANALYZER_SERVICE_API
         ports:
         - containerPort: 5000
           name: http
